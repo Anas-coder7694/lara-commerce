@@ -1,51 +1,37 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth;
+//use App\Models\OrderItem;
 use Illuminate\Http\Request;
+//use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\OrderItem;
 use App\Models\User;
 use App\Models\Orders;
 use App\Models\Products;
 
-use Illuminate\Support\Facades\Auth;
-class AdminController extends Controller
+class Vendors extends Controller
 {
-    public function AddCategory()
-    {
-        return view('admin.addcategory');
-    }
+    //
+    public function vendorOrders(){
+        // Fetch only the order items that belong to the logged-in vendor's products
+        $order_items = OrderItem::whereHas('product', function($query) {
+            $query->where('vendor_id', Auth::id());
+        })->with('order')->get();
 
-    public function postAddCategory(Request $request){
-        $category= new Category();
-        $category->category=$request->category;
-        $category->save();
-        return redirect()->back()->with('category_message','Category added successfully!!');
-       
+        return view('vendor.orders', compact('order_items'));
     }
-    public function ViewCategory(){
+       public function ViewCategory(){
         $categories=Category::all();
         return view('admin.viewcategory',compact('categories'));
     }
 
-    public function deleteCategory($id){
-        $category=Category::findOrFail($id);
-        $category->delete();
-        return redirect()->back()->with('deletecategory_message','Delete successfully');
-    }
+    
 
-    public function updateCategory($id){
-       $category =Category::findOrFail($id);
-       return view('admin.updatecategory',compact('category'));
-    }
+    
 
-    public function postUpdateCategory(Request $request,$id){
-        $category=Category::findOrFail($id);
-
-        $category->category=$request->category;
-         return redirect()->back()->with('category_updated_message','Category Updated successfully!!');
-    }
+    
 
     public function addProduct(){
        $categories =Category::all();
@@ -59,7 +45,7 @@ class AdminController extends Controller
     $product->product_quantity = $request->product_quantity;
     $product->product_price = $request->product_price;
     $product->product_category = $request->product_category;
-
+    $product->vendor_id = Auth::id();
     if($request->hasFile('product_image')){
         $image = $request->file('product_image');
         $imagename = time().'.'.$image->getClientOriginalExtension();
@@ -70,7 +56,7 @@ class AdminController extends Controller
         // Save image name in DB
         $product->product_image = $imagename;
     }
-    $product->vendor_id = Auth::id();
+
     $product->save();
 
     return redirect()->back()->with('product_message','Product added successfully!');
@@ -118,35 +104,5 @@ class AdminController extends Controller
 
         return redirect()->back()->with('product_message','Product added successfully!');
     }
-
-    public function searchProduct(Request $request){
-        $products= Products::where('product_title','LIKE','%'.$request->search.'%')
-                            ->orWhere('product_description','LIKE','%'.$request->search.'%')
-                            ->orWhere('product_category','LIKE','%'.$request->search.'%')
-                            ->paginate(2);
-
-        return view ('admin.viewproduct',compact('products'));
-    }
-
-//viewUsers
-    public function viewUsers(){
-        $user=User::all();
-        return view ('admin.user_list',compact('user'));
-    }
-    public function viewUserOrders(){
-       $orders = Orders::all();
-       return view('admin.vieworders',compact('orders'));
-    }
-    public function viewOrderDetails($id)
-{
-    $order = Orders::findOrFail($id);
-    //dd($order);
-
-    $order_items = OrderItem::with('product')
-        ->where('order_id', $id)
-        ->get();
-
-    return view('admin.order_details', compact('order', 'order_items'));
-}
 
 }

@@ -23,6 +23,7 @@
         <tr style="text-align: center;background-color: #303833; color: white;">
             <th style="padding: 10px; border: 1px solid #ddd;">ID</th>
             <th style="padding: 10px; border: 1px solid #ddd;">Product Title</th>
+            <th style="padding: 10px; border: 1px solid #ddd;">Vendor</th>
             <th style="padding: 10px; border: 1px solid #ddd;">Product Description</th>
             <th style="padding: 10px; border: 1px solid #ddd;">Product Quantity</th>
             <th style="padding: 10px; border: 1px solid #ddd;">Product Price</th>
@@ -43,6 +44,9 @@
             </td>
             <td style="padding: 8px; border: 1px solid #ddd;">
                 {{ $product->product_title }}
+            </td>
+            <td>
+                {{ $product->vendor->shop_name }}
             </td>
             <td style="padding: 8px; border: 1px solid #ddd;">
                 {{ $product->product_description }}

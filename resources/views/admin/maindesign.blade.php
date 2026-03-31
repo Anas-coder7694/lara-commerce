@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="admin/css/custom.css">
     <!-- Favicon-->
     <link rel="shortcut icon" href="admin/img/favicon.ico">
+    <link rel="stylesheet" href="{{ asset('admin_css/style.css') }}">
     <!-- Tweaks for older IEs--><!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
@@ -100,7 +101,7 @@
         <ul id="productDropdown" class="collapse list-unstyled">
             <li><a href="{{ route('admin.addproduct') }}">Add Product</a></li>
             <li><a href="{{ route('admin.viewproducts') }}">View Product</a></li>
-            <li><a href="{{ route('admin.vieworder') }}">View Order</a></li>
+            <li><a href="{{ route('admin.user.orders') }}">View Order</a></li>
            
         </ul>
     </li>
@@ -140,7 +141,7 @@
           @yield('view_orders')
           @yield('userlist')
           @yield('user_order')
-          
+          @yield('order_details')
           
         </section>
         
