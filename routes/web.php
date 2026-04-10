@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+ 
 
 Route::get('/', [UserController::class,'home'])->name('index');
 Route::get('/product_details/{id}',[UserController::class,'productDetails'])->name('product_details');
@@ -33,7 +35,7 @@ Route::controller(UserController::class)->middleware(['auth', 'verified'])->grou
 
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function () {  
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -56,16 +58,30 @@ Route::middleware('admin')->group(function () {
     Route::post('/update_product/{id}',[AdminController::class,'postUpdateProduct'])->name('admin.postupdateproduct');
     Route::any('/search',[AdminController::class,'searchProduct'])->name('admin.searchproduct');
     
-    Route::get('vieworder',[AdminController::class,'viewOrder'])->name('admin.vieworder');
+   
     Route::post('/change_status/{id}',[AdminController::class,'changeStatus'])->name('admin.change_status');
     Route::get('/downloadpdf/{id}',[AdminController::class,'downloadPDF'])->name('admin.downloadpdf');
     
     //Users
     Route::get('/view_users',[AdminController::class,'viewUsers'])->name('admin.userlist');
-    Route::get('/view_user_orders/{id}',[AdminController::class,'viewUserOrders'])->name('admin.user.orders');
-    
+    Route::get('/view_user_orders',[AdminController::class,'viewUserOrders'])->name('admin.user.orders');
+    Route::get('/view_order_details/{id}',[AdminController::class,'viewOrderDetails'])->name('admin.view_details');
+    //'admin.view_details'
     // admin.user.orders
     
     });
+
+Route::middleware('vendor')->group(function () {
+        Route::get('/test_vendor', [VendorController::class, 'Test'])->name('vendor.test');
+        Route::get('/Add_Product1', [VendorController::class, 'addProduct'])->name('vendor.addproduct');
+        Route::post('/Add_Product1', [VendorController::class, 'postAddProduct'])->name('vendor.postaddproduct');
+        Route::get('/view_category1', [VendorController::class, 'viewCategory'])->name('vendor.viewcategory');
+        Route::get('/view_product1',[VendorController::class,'viewProducts'])->name('vendor.viewproducts');
+
+        Route::get('/view_user_orders1',[VendorController::class,'vendorOrders'])->name('vendor.user.orders');
+    Route::get('/view_order_details1/{id}',[VendorController::class,'viewOrderDetails'])->name('vendor.view_details');
+        //vendor.orders
+
+    });    
 
 require __DIR__.'/auth.php';

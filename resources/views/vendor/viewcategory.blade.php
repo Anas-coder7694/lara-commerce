@@ -1,4 +1,4 @@
-@extends('admin.maindesign')
+@extends('vendor.maindesign')
 
 
 @section('viewcategory')

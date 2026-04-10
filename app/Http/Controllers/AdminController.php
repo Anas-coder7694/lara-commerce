@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\OrderItem;
 use App\Models\User;
 use App\Models\Orders;
 use App\Models\Products;
@@ -43,7 +44,10 @@ class AdminController extends Controller
         $category=Category::findOrFail($id);
 
         $category->category=$request->category;
-         return redirect()->back()->with('category_updated_message','Category Updated successfully!!');
+        
+        $category->save(); 
+
+        return redirect()->back()->with('category_updated_message','Category Updated successfully!!');
     }
 
     public function addProduct(){
@@ -62,13 +66,18 @@ class AdminController extends Controller
     if($request->hasFile('product_image')){
         $image = $request->file('product_image');
         $imagename = time().'.'.$image->getClientOriginalExtension();
-        
-        // Move image to folder
         $image->move(public_path('products'), $imagename);
-
-        // Save image name in DB
         $product->product_image = $imagename;
     }
+
+    // ✅ FIXED PART
+    $vendor = Auth::user()->vendor;
+
+    if (!$vendor) {
+        return redirect()->back()->with('error', 'No vendor account found');
+    }
+
+    $product->vendor_id = $vendor->id;
 
     $product->save();
 
@@ -112,6 +121,7 @@ class AdminController extends Controller
             $product->product_image = $imagename;
         }
 
+        $product->vendor_id = Auth::user()->vendor->id;
         $product->save();
 
         return redirect()->back()->with('product_message','Product added successfully!');
@@ -131,9 +141,20 @@ class AdminController extends Controller
         $user=User::all();
         return view ('admin.user_list',compact('user'));
     }
-    public function viewOrder(){
-       $orders = Orders::where('user_id', Auth::id())->get();
+    public function viewUserOrders(){
+       $orders = Orders::all();
        return view('admin.vieworders',compact('orders'));
     }
+    public function viewOrderDetails($id)
+{
+    $order = Orders::findOrFail($id);
+    //dd($order);
+
+    $order_items = OrderItem::with('product')
+        ->where('order_id', $id)
+        ->get();
+
+    return view('admin.order_details', compact('order', 'order_items'));
+}
 
 }

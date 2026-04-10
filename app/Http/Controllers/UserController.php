@@ -27,6 +27,9 @@ class UserController extends Controller
             }else if(Auth::check() && Auth::user()->user_type=="admin"){
                 return view('admin.dashboard');
             }
+            else if(Auth::check() && Auth::user()->user_type=="vendor"){
+                return view('vendor.dashboard');
+            }
         
    }
 

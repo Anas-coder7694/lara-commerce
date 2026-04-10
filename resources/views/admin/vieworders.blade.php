@@ -5,13 +5,12 @@
 <table>
     <thead>
         <tr style="text-align: center;background-color: #303833; color: white;">
-            <th style="padding: 10px; border: 1px solid #ddd;">Customer Name</th>
-            <th style="padding: 10px; border: 1px solid #ddd;">Address</th>
+            <th style="padding: 10px; border: 1px solid #ddd;">Order ID</th>
+            <th style="padding: 10px; border: 1px solid #ddd;">User ID</th>
+            <th style="padding: 10px; border: 1px solid #ddd;">Reciever Address</th>
             <th style="padding: 10px; border: 1px solid #ddd;">Phone</th>
-            <th style="padding: 10px; border: 1px solid #ddd;">Product</th>
-            <th style="padding: 10px; border: 1px solid #ddd;">Price</th>
-            <th style="padding: 10px; border: 1px solid #ddd;">Product Image</th>
-            <th style="padding: 10px; border: 1px solid #ddd;">Action</th>
+            <th style="padding: 10px; border: 1px solid #ddd;">Total</th>
+            <th style="padding: 10px; border: 1px solid #ddd;" colspan="2">Action</th>
             
         </tr>
     </thead>
@@ -20,12 +19,14 @@
 
 @foreach ($orders as $order)
 
-    @foreach ($order->items as $item)
+   
 
         <tr style="text-align: center;">
-
             <td style="padding: 8px; border: 1px solid #ddd;">
-                {{ optional($order->user)->name }}
+                {{ $order->id }}
+            </td>
+            <td style="padding: 8px; border: 1px solid #ddd;">
+                {{ $order->user_id }}
             </td>
 
             <td style="padding: 8px; border: 1px solid #ddd;">
@@ -37,17 +38,10 @@
             </td>
 
             <td style="padding: 8px; border: 1px solid #ddd;">
-                {{ optional($item->product)->product_title }}
+                {{ $order->total_price }}
             </td>
 
-            <td style="padding: 8px; border: 1px solid #ddd;">
-                {{ $item->product_price }}
-            </td>
-
-            <td style="padding: 8px; border: 1px solid #ddd;">
-                <img style="width:80px;"
-                     src="{{ asset('products/'.optional($item->product)->product_image) }}">
-            </td>
+            
 
             <td style="padding: 12px;">
                 <form action="{{ route('admin.change_status',$order->id) }}" method="post">
@@ -60,11 +54,15 @@
                 </form>
             </td>
 
+            <td style="padding: 8px; border: 1px solid #ddd;">
+                <a href="{{ route('admin.view_details',$order->id) }}">See details</a>
+            </td> 
+
             
 
         </tr>
 
-    @endforeach
+    
 
 @endforeach
 

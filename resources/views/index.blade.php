@@ -1,7 +1,7 @@
 @extends('maindesign')
 @section("index")
 
-
+    
     <div class="container">
       <div class="heading_container heading_center">
         <h2>
