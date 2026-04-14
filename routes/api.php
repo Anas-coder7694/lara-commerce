@@ -4,6 +4,7 @@ use App\Http\Controllers\api\ProductController;
 use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\AuthenticatedSessionController;
 use App\Http\Controllers\api\RegisteredUserController;
+use App\Http\Controllers\api\AddProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
@@ -25,6 +26,10 @@ Route::get('read_product',[ProductController::class,'index']);
 //AUTH
 Route::post('login_api', [AuthenticatedSessionController::class, 'store']);
 Route::post('register_api', [RegisteredUserController::class, 'store']);
+
+//ADD_PRODUCT
+Route::post('add_product',[AddProductController::class,'AddProduct']);
+
 
 
 

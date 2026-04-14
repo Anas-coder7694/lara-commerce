@@ -7,8 +7,11 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
+use Pest\ArchPresets\Php;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -23,17 +26,30 @@ class AuthenticatedSessionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-     public function store(LoginRequest $request): JsonResponse
-    {
-        $request->authenticate();
+     public function store(Request $request): JsonResponse
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required'
+    ]);
 
-        //$request->session()->regenerate();
+    $user = User::where('email', $request->email)->first();
 
+    if (!$user || !Hash::check($request->password, $user->password)) {
         return response()->json([
-            'message' => 'Login successful',
-            'user' => Auth::user()
-        ]);
+            'message' => 'Invalid credentials'
+        ], 401);
     }
+
+    // create token (IMPORTANT for API)
+    $token = $user->createToken('api-token')->plainTextToken;
+
+    return response()->json([
+        'message' => 'Login successful',
+        'user' => $user,
+        'token' => $token
+    ]);
+}
 
     /**
      * Display the specified resource.

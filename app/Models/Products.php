@@ -18,6 +18,9 @@ class Products extends Model
             'product_category',
             'product_image'
 
+
+            
+
         ];
     public function vendor(){
         return $this->belongsTo(Vendor::class);

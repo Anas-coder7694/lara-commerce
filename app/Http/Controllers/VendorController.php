@@ -12,7 +12,7 @@ class VendorController extends Controller
 {
     // ✅ Get logged-in vendor safely
     private function getVendor()
-    {
+    {  // dd(Auth::user()->id);
         $vendor = Auth::user()->vendor;
 
         if (!$vendor) {
@@ -58,7 +58,7 @@ class VendorController extends Controller
     public function postAddProduct(Request $request)
     {
        $vendor = $this->getVendor();
-
+        dd($vendor->id);
         $product = new Products();
         $product->product_title = $request->product_title;
         $product->product_description = $request->product_description;
