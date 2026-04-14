@@ -58,7 +58,7 @@ class VendorController extends Controller
     public function postAddProduct(Request $request)
     {
        $vendor = $this->getVendor();
-        dd($vendor->id);
+        dd(Auth::user()->id);
         $product = new Products();
         $product->product_title = $request->product_title;
         $product->product_description = $request->product_description;

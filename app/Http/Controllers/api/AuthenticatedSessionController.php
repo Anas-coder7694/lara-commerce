@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Auth\Events\Login;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Pest\ArchPresets\Php;
@@ -42,12 +43,19 @@ class AuthenticatedSessionController extends Controller
     }
 
     // create token (IMPORTANT for API)
-    $token = $user->createToken('api-token')->plainTextToken;
+    // $token = $user->createToken('api-token')->plainTextToken;
 
+    // return response()->json([
+    //     'message' => 'Login successful',
+    //     'user' => $user,
+    //     'token' => $token
+    // ]);
+
+    $token =$user ->createToken('api-token')->plainTextToken;
     return response()->json([
-        'message' => 'Login successful',
-        'user' => $user,
-        'token' => $token
+        "message" => "Login successful",
+        "user" =>$user,
+        "token"=>$token
     ]);
 }
 
